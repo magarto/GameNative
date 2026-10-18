@@ -6,6 +6,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Computer
 import androidx.compose.material.icons.filled.Download
+import androidx.compose.material.icons.filled.Image
 import androidx.compose.material.icons.filled.Upload
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Icon
@@ -39,7 +40,9 @@ import kotlin.system.exitProcess
 fun SettingsGroupSteamSession() {
     val context = LocalContext.current
     var machineName by remember { mutableStateOf(PrefManager.customMachineName) }
-    var editing by remember { mutableStateOf(false) }
+    var gridKey by remember { mutableStateOf(PrefManager.steamGridDbApiKey) }
+    // Which text setting the dialog edits: "machine", "grid" or null.
+    var editing by remember { mutableStateOf<String?>(null) }
 
     val exportLauncher = rememberLauncherForActivityResult(ActivityResultContracts.CreateDocument("application/json")) { uri ->
         if (uri == null) return@rememberLauncherForActivityResult
@@ -89,7 +92,19 @@ fun SettingsGroupSteamSession() {
             title = { Text(stringResource(R.string.settings_steam_machine_name)) },
             subtitle = { Text(machineName.ifBlank { stringResource(R.string.settings_steam_machine_name_default) }) },
             icon = { Icon(Icons.Filled.Computer, contentDescription = null) },
-            onClick = { editing = true },
+            onClick = { editing = "machine" },
+        )
+        SettingsMenuLink(
+            colors = settingsTileColors(),
+            title = { Text(stringResource(R.string.settings_steamgriddb_key)) },
+            subtitle = {
+                Text(
+                    if (gridKey.isBlank()) stringResource(R.string.settings_steamgriddb_key_none)
+                    else stringResource(R.string.settings_steamgriddb_key_set, gridKey.takeLast(4)),
+                )
+            },
+            icon = { Icon(Icons.Filled.Image, contentDescription = null) },
+            onClick = { editing = "grid" },
         )
         SettingsMenuLink(
             colors = settingsTileColors(),
@@ -107,29 +122,39 @@ fun SettingsGroupSteamSession() {
         )
     }
 
-    if (editing) {
-        var draft by remember { mutableStateOf(machineName) }
+    editing?.let { which ->
+        val grid = which == "grid"
+        var draft by remember(which) { mutableStateOf(if (grid) gridKey else machineName) }
         AlertDialog(
-            onDismissRequest = { editing = false },
-            title = { Text(stringResource(R.string.settings_steam_machine_name)) },
+            onDismissRequest = { editing = null },
+            title = { Text(stringResource(if (grid) R.string.settings_steamgriddb_key else R.string.settings_steam_machine_name)) },
             text = {
                 OutlinedTextField(
                     value = draft,
-                    onValueChange = { draft = it.take(64) },
+                    onValueChange = { draft = it.take(if (grid) 128 else 64) },
                     singleLine = true,
-                    placeholder = { Text(stringResource(R.string.settings_steam_machine_name_default)) },
-                    supportingText = { Text(stringResource(R.string.settings_steam_machine_name_hint)) },
+                    placeholder = {
+                        Text(stringResource(if (grid) R.string.settings_steamgriddb_key_none else R.string.settings_steam_machine_name_default))
+                    },
+                    supportingText = {
+                        Text(stringResource(if (grid) R.string.settings_steamgriddb_key_hint else R.string.settings_steam_machine_name_hint))
+                    },
                 )
             },
             confirmButton = {
                 TextButton(onClick = {
-                    PrefManager.customMachineName = draft
-                    machineName = draft.trim()
-                    editing = false
+                    if (grid) {
+                        PrefManager.steamGridDbApiKey = draft
+                        gridKey = draft.trim()
+                    } else {
+                        PrefManager.customMachineName = draft
+                        machineName = draft.trim()
+                    }
+                    editing = null
                 }) { Text(stringResource(android.R.string.ok)) }
             },
             dismissButton = {
-                TextButton(onClick = { editing = false }) { Text(stringResource(android.R.string.cancel)) }
+                TextButton(onClick = { editing = null }) { Text(stringResource(android.R.string.cancel)) }
             },
         )
     }

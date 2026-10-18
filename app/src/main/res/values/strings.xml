@@ -3113,4 +3113,8 @@
     <string name="settings_steam_session_exported">Steam session saved. Anyone with this file can sign in as you.</string>
     <string name="settings_steam_session_imported">Steam session imported, restarting</string>
     <string name="settings_steam_session_failed">Could not read or write the session file</string>
+    <string name="settings_steamgriddb_key">SteamGridDB API key</string>
+    <string name="settings_steamgriddb_key_none">Not set</string>
+    <string name="settings_steamgriddb_key_set">Set (…%1$s)</string>
+    <string name="settings_steamgriddb_key_hint">For game artwork. Get one at steamgriddb.com → Preferences → API.</string>
 </resources>

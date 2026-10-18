@@ -3027,4 +3027,8 @@
     <string name="settings_steam_session_exported">Sesión de Steam guardada. Quien tenga este archivo puede entrar con tu cuenta.</string>
     <string name="settings_steam_session_imported">Sesión de Steam importada, reiniciando</string>
     <string name="settings_steam_session_failed">No se pudo leer o escribir el archivo de sesión</string>
+    <string name="settings_steamgriddb_key">Clave de la API de SteamGridDB</string>
+    <string name="settings_steamgriddb_key_none">Sin configurar</string>
+    <string name="settings_steamgriddb_key_set">Configurada (…%1$s)</string>
+    <string name="settings_steamgriddb_key_hint">Para las carátulas de los juegos. Se obtiene en steamgriddb.com → Preferences → API.</string>
 </resources>

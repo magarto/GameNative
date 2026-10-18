@@ -1062,6 +1062,14 @@ object PrefManager {
         }
     }
 
+    /** A SteamGridDB API key typed in Settings; wins over the one built in (none in this fork's builds). */
+    private val STEAMGRIDDB_API_KEY = stringPreferencesKey("steamgriddb_api_key")
+    var steamGridDbApiKey: String
+        get() = getPref(STEAMGRIDDB_API_KEY, "")
+        set(value) {
+            setPref(STEAMGRIDDB_API_KEY, value.trim())
+        }
+
     /** The machine name Steam is told, or "" to use the device's own name. */
     private val CUSTOM_MACHINE_NAME = stringPreferencesKey("custom_machine_name")
     var customMachineName: String
