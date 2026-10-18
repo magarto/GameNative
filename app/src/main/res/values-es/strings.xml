@@ -3016,4 +3016,15 @@
     <string name="support_files_listing_sending">Enviando la lista de %1$s</string>
     <string name="support_files_listing_sent">Lista enviada (%1$d elementos)</string>
     <string name="support_files_listing_failed">No se pudo enviar la lista de %1$s. %2$s</string>
+    <string name="settings_steam_machine_name">Nombre del equipo en Steam</string>
+    <string name="settings_steam_machine_name_default">Nombre del dispositivo (por defecto)</string>
+    <string name="settings_steam_machine_name_hint">El nombre con el que Steam ve este dispositivo (inicios de sesión, nube, jugando en). Se aplica en el próximo inicio de sesión.</string>
+    <string name="settings_steam_session_export">Exportar sesión de Steam</string>
+    <string name="settings_steam_session_export_hint">Guarda la cuenta iniciada en un archivo, para entrar en otra instalación sin contraseña. No lo compartas.</string>
+    <string name="settings_steam_session_import">Importar sesión de Steam</string>
+    <string name="settings_steam_session_import_hint">Sustituye la sesión de Steam actual por la de un archivo de sesión. GameNative se reinicia.</string>
+    <string name="settings_steam_session_none">No hay ninguna cuenta de Steam iniciada</string>
+    <string name="settings_steam_session_exported">Sesión de Steam guardada. Quien tenga este archivo puede entrar con tu cuenta.</string>
+    <string name="settings_steam_session_imported">Sesión de Steam importada, reiniciando</string>
+    <string name="settings_steam_session_failed">No se pudo leer o escribir el archivo de sesión</string>
 </resources>

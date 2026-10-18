@@ -3102,4 +3102,15 @@
     <string name="support_wait_stop">Stop</string>
     <string name="support_reply_ready_tap">Tap to read it.</string>
     <string name="support_notify_me">Notify me when the reply arrives</string>
+    <string name="settings_steam_machine_name">Steam machine name</string>
+    <string name="settings_steam_machine_name_default">Device name (default)</string>
+    <string name="settings_steam_machine_name_hint">The name Steam shows for this device (sign-ins, cloud saves, playing on). Applies on the next sign-in.</string>
+    <string name="settings_steam_session_export">Export Steam session</string>
+    <string name="settings_steam_session_export_hint">Save the signed-in account to a file, to sign in on another install without a password. Keep it private.</string>
+    <string name="settings_steam_session_import">Import Steam session</string>
+    <string name="settings_steam_session_import_hint">Replace the current Steam sign-in with one from a session file. GameNative restarts.</string>
+    <string name="settings_steam_session_none">No Steam account is signed in</string>
+    <string name="settings_steam_session_exported">Steam session saved. Anyone with this file can sign in as you.</string>
+    <string name="settings_steam_session_imported">Steam session imported, restarting</string>
+    <string name="settings_steam_session_failed">Could not read or write the session file</string>
 </resources>

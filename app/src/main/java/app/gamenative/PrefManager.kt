@@ -1042,6 +1042,34 @@ object PrefManager {
             setPref(STEAM_USER_ACCOUNT_ID, value)
         }
 
+    /** The Steam session as a portable record: what a sign-in needs, so it can be moved to another install. */
+    data class SteamSessionRecord(val username: String, val refreshToken: String, val steamId64: Long)
+
+    fun exportSteamSession(): SteamSessionRecord? {
+        val user = username
+        val token = refreshToken
+        if (user.isEmpty() || token.isEmpty()) return null
+        return SteamSessionRecord(user, token, steamUserSteamId64)
+    }
+
+    /** Replaces the saved Steam session; written before returning, so the app can be restarted right after. */
+    fun importSteamSession(record: SteamSessionRecord) = runBlocking {
+        dataStore.edit { pref ->
+            pref.remove(ACCESS_TOKEN_ENC)
+            pref[USER_NAME] = record.username
+            pref[REFRESH_TOKEN_ENC] = Crypto.encrypt(record.refreshToken.toByteArray())
+            if (record.steamId64 != 0L) pref[STEAM_USER_STEAM_ID_64] = record.steamId64 else pref.remove(STEAM_USER_STEAM_ID_64)
+        }
+    }
+
+    /** The machine name Steam is told, or "" to use the device's own name. */
+    private val CUSTOM_MACHINE_NAME = stringPreferencesKey("custom_machine_name")
+    var customMachineName: String
+        get() = getPref(CUSTOM_MACHINE_NAME, "")
+        set(value) {
+            setPref(CUSTOM_MACHINE_NAME, value.trim())
+        }
+
     private val STEAM_USER_STEAM_ID_64 = longPreferencesKey("steam_user_steam_id_64")
     var steamUserSteamId64: Long
         get() = getPref(STEAM_USER_STEAM_ID_64, 0L)

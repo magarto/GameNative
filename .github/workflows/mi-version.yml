@@ -1,0 +1,64 @@
+name: Mi versión (APK firmado)
+
+on:
+  push:
+    branches: [ "mi-version" ]
+    paths-ignore: [ '**.md' ]
+  workflow_dispatch:
+
+concurrency:
+  group: mi-version-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+    - uses: actions/checkout@v4
+    - name: Add swap
+      run: |
+        sudo fallocate -l 8G /mnt/swapfile.ci
+        sudo chmod 600 /mnt/swapfile.ci
+        sudo mkswap /mnt/swapfile.ci
+        sudo swapon /mnt/swapfile.ci
+    - uses: actions/setup-java@v4
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+        cache: gradle
+    - uses: gradle/actions/setup-gradle@v4
+    - name: Install Android SDK Build Tools
+      run: |
+        SDKMANAGER="$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager"
+        yes | "$SDKMANAGER" --install "build-tools;34.0.0" >/dev/null
+    - name: Build
+      run: ./gradlew -Pkotlin.daemon.jvmargs=-Xmx3g :app:bundleLegacyRelease
+    - name: Universal APK
+      run: |
+        ./gradlew --stop
+        java -jar tools/bundletool-all-1.17.2.jar build-apks --bundle=app/build/outputs/bundle/legacyRelease/app-legacy-release.aab --output=app.apks --mode=universal
+        unzip -p app.apks universal.apk > unsigned.apk
+    - name: Sign
+      env:
+        KEYSTORE: ${{ secrets.KEYSTORE }}
+        ALIAS: ${{ secrets.KEYSTORE_KEY_ALIAS }}
+        KEY_PASS: ${{ secrets.KEYSTORE_KEY_PASSWORD }}
+        STORE_PASS: ${{ secrets.KEYSTORE_STORE_PASSWORD }}
+      run: |
+        echo "$KEYSTORE" | base64 --decode > ks.jks
+        "$ANDROID_HOME/build-tools/34.0.0/apksigner" sign --ks ks.jks --ks-key-alias "$ALIAS" \
+          --ks-pass "pass:$STORE_PASS" --key-pass "pass:$KEY_PASS" --out GameNative-mi-version.apk unsigned.apk
+        rm ks.jks
+        "$ANDROID_HOME/build-tools/34.0.0/apksigner" verify --print-certs GameNative-mi-version.apk | head -3
+    - name: Publish
+      env:
+        GH_TOKEN: ${{ github.token }}
+      run: |
+        tag="mi-version-${GITHUB_SHA::7}"
+        gh release create "$tag" GameNative-mi-version.apk --prerelease --target "$GITHUB_SHA" \
+          --title "GameNative mi versión ${GITHUB_SHA::7}" \
+          --notes "GameNative (legacy) con exportar/importar sesión de Steam y nombre del equipo, firmado con la clave de magarto."

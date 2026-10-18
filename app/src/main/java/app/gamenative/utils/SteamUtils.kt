@@ -1499,6 +1499,7 @@ object SteamUtils {
      * Gets the Android user-editable device name or falls back to [HardwareUtils.getMachineName]
      */
     fun getMachineName(context: Context): String {
+        PrefManager.customMachineName.takeIf { it.isNotBlank() }?.let { return it }
         return try {
             // Try different methods to get device name
             Settings.Global.getString(context.contentResolver, Settings.Global.DEVICE_NAME)

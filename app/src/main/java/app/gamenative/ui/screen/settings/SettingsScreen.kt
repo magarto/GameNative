@@ -148,6 +148,7 @@ private fun SettingsScreenContent(
                     iconTint = PluviaTheme.colors.accentCyan,
                 ) {
                     SettingsGroupAccounts()
+                    SettingsGroupSteamSession()
                 }
 
                 // Performance section
