@@ -1,0 +1,44 @@
+name: Traer versiones nuevas del original
+
+# Once a day: if utkarshdalal/GameNative published a release this branch does not have yet, merge
+# it into mi-version and build. A conflict, or an upstream change to .github/workflows (which the
+# workflow token may not push), opens an issue here instead, to be merged by hand.
+on:
+  schedule:
+    - cron: '17 5 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  actions: write
+  issues: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        ref: mi-version
+        fetch-depth: 0
+    - name: Merge the latest upstream release
+      env:
+        GH_TOKEN: ${{ github.token }}
+      run: |
+        set -euo pipefail
+        tag=$(gh release view -R utkarshdalal/GameNative --json tagName -q .tagName)
+        git remote add upstream https://github.com/utkarshdalal/GameNative.git
+        git fetch -q upstream tag "$tag" --no-tags
+        if git merge-base --is-ancestor "$tag" HEAD; then
+          echo "Already has $tag"; exit 0
+        fi
+        git config user.name "github-actions[bot]"
+        git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+        fail() {
+          gh issue create -R "$GITHUB_REPOSITORY" --title "Fusionar $tag a mano" \
+            --body "La fusión automática de $tag en mi-version no se pudo hacer: $1" || true
+          exit 1
+        }
+        git merge --no-edit -m "Merge upstream $tag into mi-version" "$tag" || fail "hay conflictos."
+        git push origin HEAD:mi-version || fail "el original cambió archivos de .github/workflows (hay que subirlo a mano)."
+        gh workflow run mi-version.yml -R "$GITHUB_REPOSITORY" --ref mi-version

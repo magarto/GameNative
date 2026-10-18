@@ -37,7 +37,9 @@ jobs:
         yes | "$SDKMANAGER" --install "build-tools;34.0.0" >/dev/null
     - name: Empty credentials (no PostHog, no SteamGridDB)
       run: |
-        printf 'POSTHOG_API_KEY=\nPOSTHOG_HOST=\nSTEAMGRIDDB_API_KEY=\nCLOUD_PROJECT_NUMBER=\n' > local.properties
+        # The secrets plugin needs the file but turns every key in it into a field, and an empty
+        # value is not valid Java: leave it with no keys (the build defaults them to "").
+        echo '# no keys in this fork' > local.properties
     - name: Build
       run: ./gradlew -Pkotlin.daemon.jvmargs=-Xmx3g :app:bundleLegacyRelease
     - name: Universal APK
