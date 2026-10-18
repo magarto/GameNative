@@ -35,6 +35,9 @@ jobs:
       run: |
         SDKMANAGER="$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager"
         yes | "$SDKMANAGER" --install "build-tools;34.0.0" >/dev/null
+    - name: Empty credentials (no PostHog, no SteamGridDB)
+      run: |
+        printf 'POSTHOG_API_KEY=\nPOSTHOG_HOST=\nSTEAMGRIDDB_API_KEY=\nCLOUD_PROJECT_NUMBER=\n' > local.properties
     - name: Build
       run: ./gradlew -Pkotlin.daemon.jvmargs=-Xmx3g :app:bundleLegacyRelease
     - name: Universal APK
