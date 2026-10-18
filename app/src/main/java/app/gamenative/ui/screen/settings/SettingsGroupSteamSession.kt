@@ -1,7 +1,6 @@
 package app.gamenative.ui.screen.settings
 
 import android.content.Intent
-import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.material.icons.Icons
@@ -23,6 +22,7 @@ import androidx.compose.ui.res.stringResource
 import app.gamenative.PrefManager
 import app.gamenative.R
 import app.gamenative.ui.theme.settingsTileColors
+import app.gamenative.ui.util.SnackbarManager
 import com.alorma.compose.settings.ui.SettingsGroup
 import com.alorma.compose.settings.ui.SettingsMenuLink
 import org.json.JSONObject
@@ -45,7 +45,7 @@ fun SettingsGroupSteamSession() {
         if (uri == null) return@rememberLauncherForActivityResult
         val record = PrefManager.exportSteamSession()
         if (record == null) {
-            Toast.makeText(context, R.string.settings_steam_session_none, Toast.LENGTH_LONG).show()
+            SnackbarManager.show(context.getString(R.string.settings_steam_session_none))
             return@rememberLauncherForActivityResult
         }
         try {
@@ -54,10 +54,10 @@ fun SettingsGroupSteamSession() {
                 .put("refreshToken", record.refreshToken)
                 .put("steamId64", record.steamId64.toString())
             context.contentResolver.openOutputStream(uri, "wt")!!.use { it.write(json.toString(2).toByteArray()) }
-            Toast.makeText(context, R.string.settings_steam_session_exported, Toast.LENGTH_LONG).show()
+            SnackbarManager.show(context.getString(R.string.settings_steam_session_exported))
         } catch (e: Exception) {
             Timber.w(e, "Steam session export failed")
-            Toast.makeText(context, R.string.settings_steam_session_failed, Toast.LENGTH_LONG).show()
+            SnackbarManager.show(context.getString(R.string.settings_steam_session_failed))
         }
     }
 
@@ -71,7 +71,7 @@ fun SettingsGroupSteamSession() {
             require(username.isNotEmpty() && token.isNotEmpty()) { "username or refreshToken missing" }
             val steamId = json.optString("steamId64").toLongOrNull() ?: 0L
             PrefManager.importSteamSession(PrefManager.SteamSessionRecord(username, token, steamId))
-            Toast.makeText(context, R.string.settings_steam_session_imported, Toast.LENGTH_LONG).show()
+            SnackbarManager.show(context.getString(R.string.settings_steam_session_imported))
             // The service read the old session at start: start over so it signs in with this one.
             context.packageManager.getLaunchIntentForPackage(context.packageName)?.let {
                 context.startActivity(Intent.makeRestartActivityTask(it.component))
@@ -79,7 +79,7 @@ fun SettingsGroupSteamSession() {
             exitProcess(0)
         } catch (e: Exception) {
             Timber.w(e, "Steam session import failed")
-            Toast.makeText(context, R.string.settings_steam_session_failed, Toast.LENGTH_LONG).show()
+            SnackbarManager.show(context.getString(R.string.settings_steam_session_failed))
         }
     }
 
