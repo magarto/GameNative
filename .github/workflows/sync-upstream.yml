@@ -1,6 +1,6 @@
 name: Traer versiones nuevas del original
 
-# Once a day: if utkarshdalal/GameNative published a release this branch does not have yet, merge
+# Once a day: if utkarshdalal/GameNative published a release or pre-release this branch does not have yet, merge
 # it into mi-version and build. A conflict, or an upstream change to .github/workflows (which the
 # workflow token may not push), opens an issue here instead, to be merged by hand.
 on:
@@ -21,12 +21,12 @@ jobs:
       with:
         ref: mi-version
         fetch-depth: 0
-    - name: Merge the latest upstream release
+    - name: Merge the latest upstream release or pre-release
       env:
         GH_TOKEN: ${{ github.token }}
       run: |
         set -euo pipefail
-        tag=$(gh release view -R utkarshdalal/GameNative --json tagName -q .tagName)
+        tag=$(gh release list -R utkarshdalal/GameNative --limit 1 --json tagName -q '.[0].tagName')
         git remote add upstream https://github.com/utkarshdalal/GameNative.git
         git fetch -q upstream tag "$tag" --no-tags
         if git merge-base --is-ancestor "$tag" HEAD; then
