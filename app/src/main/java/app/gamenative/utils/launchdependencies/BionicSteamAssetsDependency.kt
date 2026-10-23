@@ -64,6 +64,11 @@ object BionicSteamAssetsDependency : LaunchDependency {
         "proton-11.0-2-x86_64-1",
         "proton-11.0-2-arm64ec-1",
         "proton-11.0-2.3-arm64ec-1",
+        "proton-11.0-2.4-arm64ec-1",
+        "proton-11.0-2-x86_64-6",
+        "proton-11.0-2-arm64ec-6",
+        "proton-11.0-2-x86_64-7",
+        "proton-11.0-2-arm64ec-7",
     )
 
     /**
@@ -76,6 +81,11 @@ object BionicSteamAssetsDependency : LaunchDependency {
         "proton-11.0-2-x86_64-1" to STEAM_EXE_PROTON11,
         "proton-11.0-2-arm64ec-1" to STEAM_EXE_PROTON11,
         "proton-11.0-2.3-arm64ec-1" to STEAM_EXE_PROTON11,
+        "proton-11.0-2.4-arm64ec-1" to STEAM_EXE_PROTON11,
+        "proton-11.0-2-x86_64-6" to STEAM_EXE_PROTON11,
+        "proton-11.0-2-arm64ec-6" to STEAM_EXE_PROTON11,
+        "proton-11.0-2-x86_64-7" to STEAM_EXE_PROTON11,
+        "proton-11.0-2-arm64ec-7" to STEAM_EXE_PROTON11,
     )
 
     /** Filename of the steam.exe helper (server asset + filesDir cache) for this container. */
