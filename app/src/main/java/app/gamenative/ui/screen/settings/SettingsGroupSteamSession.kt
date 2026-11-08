@@ -4,6 +4,7 @@ import android.content.Intent
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.CloudOff
 import androidx.compose.material.icons.filled.Computer
 import androidx.compose.material.icons.filled.Download
 import androidx.compose.material.icons.filled.Image
@@ -26,6 +27,7 @@ import app.gamenative.ui.theme.settingsTileColors
 import app.gamenative.ui.util.SnackbarManager
 import com.alorma.compose.settings.ui.SettingsGroup
 import com.alorma.compose.settings.ui.SettingsMenuLink
+import com.alorma.compose.settings.ui.SettingsSwitch
 import org.json.JSONObject
 import timber.log.Timber
 import kotlin.system.exitProcess
@@ -41,6 +43,7 @@ fun SettingsGroupSteamSession() {
     val context = LocalContext.current
     var machineName by remember { mutableStateOf(PrefManager.customMachineName) }
     var gridKey by remember { mutableStateOf(PrefManager.steamGridDbApiKey) }
+    var cloudOff by remember { mutableStateOf(PrefManager.steamCloudSyncDisabled) }
     // Which text setting the dialog edits: "machine", "grid" or null.
     var editing by remember { mutableStateOf<String?>(null) }
 
@@ -87,6 +90,17 @@ fun SettingsGroupSteamSession() {
     }
 
     SettingsGroup {
+        SettingsSwitch(
+            colors = settingsTileColors(),
+            title = { Text(stringResource(R.string.settings_steam_cloud_off)) },
+            subtitle = { Text(stringResource(R.string.settings_steam_cloud_off_hint)) },
+            icon = { Icon(Icons.Filled.CloudOff, contentDescription = null) },
+            state = cloudOff,
+            onCheckedChange = {
+                cloudOff = it
+                PrefManager.steamCloudSyncDisabled = it
+            },
+        )
         SettingsMenuLink(
             colors = settingsTileColors(),
             title = { Text(stringResource(R.string.settings_steam_machine_name)) },

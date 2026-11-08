@@ -3095,7 +3095,7 @@ fun preLaunchApp(
         }
 
         if (gameSource == GameSource.STEAM && (container.isLaunchHeadlessSteam || container.isLaunchBionicSteam) &&
-            !container.isLocalSavesOnly && !bootToContainer && !isOffline
+            !container.isLocalSavesOnly && !PrefManager.steamCloudSyncDisabled && !bootToContainer && !isOffline
         ) {
             try {
                 val rockstarGameDir = File(SteamService.getAppDirPath(gameId))

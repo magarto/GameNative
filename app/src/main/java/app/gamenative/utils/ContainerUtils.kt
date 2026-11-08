@@ -1357,6 +1357,7 @@ object ContainerUtils {
     }
 
     fun isLocalSavesOnly(context: Context, appId: String): Boolean {
+        if (PrefManager.steamCloudSyncDisabled && extractGameSourceFromContainerId(appId) == GameSource.STEAM) return true
         if (!hasContainer(context, appId)) return false
         val container = getContainer(context, appId)
         return container.isLocalSavesOnly

@@ -1100,6 +1100,14 @@ object PrefManager {
             setPref(STEAMGRIDDB_API_KEY, value.trim())
         }
 
+    /** Never sync Steam Cloud saves for any Steam game, whatever each container says. */
+    private val STEAM_CLOUD_SYNC_DISABLED = booleanPreferencesKey("steam_cloud_sync_disabled")
+    var steamCloudSyncDisabled: Boolean
+        get() = getPref(STEAM_CLOUD_SYNC_DISABLED, false)
+        set(value) {
+            setPref(STEAM_CLOUD_SYNC_DISABLED, value)
+        }
+
     /** The machine name Steam is told, or "" to use the device's own name. */
     private val CUSTOM_MACHINE_NAME = stringPreferencesKey("custom_machine_name")
     var customMachineName: String
