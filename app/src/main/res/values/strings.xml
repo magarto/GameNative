@@ -3154,6 +3154,8 @@
     <string name="settings_steam_machine_name">Steam machine name</string>
     <string name="settings_steam_cloud_off">Never sync Steam Cloud saves</string>
     <string name="settings_steam_cloud_off_hint">Steam games keep their saves on this device only. Nothing is downloaded or uploaded when a game starts or closes.</string>
+    <string name="settings_steam_start_offline">Start Steam in offline mode</string>
+    <string name="settings_steam_start_offline_hint">The library opens offline every time and stays offline after Steam signs in. Use Go online (Steam) in the menu to connect.</string>
     <string name="settings_steam_machine_name_default">Device name (default)</string>
     <string name="settings_steam_machine_name_hint">The name Steam shows for this device (sign-ins, cloud saves, playing on). Applies on the next sign-in.</string>
     <string name="settings_steam_session_export">Export Steam session</string>

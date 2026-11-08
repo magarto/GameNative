@@ -4,6 +4,7 @@ import android.content.Intent
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AirplanemodeActive
 import androidx.compose.material.icons.filled.CloudOff
 import androidx.compose.material.icons.filled.Computer
 import androidx.compose.material.icons.filled.Download
@@ -44,6 +45,7 @@ fun SettingsGroupSteamSession() {
     var machineName by remember { mutableStateOf(PrefManager.customMachineName) }
     var gridKey by remember { mutableStateOf(PrefManager.steamGridDbApiKey) }
     var cloudOff by remember { mutableStateOf(PrefManager.steamCloudSyncDisabled) }
+    var startOffline by remember { mutableStateOf(PrefManager.startSteamOffline) }
     // Which text setting the dialog edits: "machine", "grid" or null.
     var editing by remember { mutableStateOf<String?>(null) }
 
@@ -99,6 +101,17 @@ fun SettingsGroupSteamSession() {
             onCheckedChange = {
                 cloudOff = it
                 PrefManager.steamCloudSyncDisabled = it
+            },
+        )
+        SettingsSwitch(
+            colors = settingsTileColors(),
+            title = { Text(stringResource(R.string.settings_steam_start_offline)) },
+            subtitle = { Text(stringResource(R.string.settings_steam_start_offline_hint)) },
+            icon = { Icon(Icons.Filled.AirplanemodeActive, contentDescription = null) },
+            state = startOffline,
+            onCheckedChange = {
+                startOffline = it
+                PrefManager.startSteamOffline = it
             },
         )
         SettingsMenuLink(

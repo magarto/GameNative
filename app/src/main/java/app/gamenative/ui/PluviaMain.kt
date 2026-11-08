@@ -733,7 +733,7 @@ fun PluviaMain(
                                 } else if (currentRoute == PluviaScreen.Home.route + "?offline={offline}") {
                                     val isCurrentlyOffline = navController.currentBackStackEntry
                                         ?.arguments?.getBoolean("offline") ?: false
-                                    if (isCurrentlyOffline) {
+                                    if (isCurrentlyOffline && !PrefManager.startSteamOffline) {
                                         navController.navigate(PluviaScreen.Home.route + "?offline=false") {
                                             popUpTo(PluviaScreen.Home.route + "?offline={offline}") {
                                                 inclusive = true
@@ -949,7 +949,7 @@ fun PluviaMain(
             // Only navigate if currently on LoginUser screen to avoid disrupting user's current view
             if (PlatformAuthUtils.isSignedInToAnyPlatform(context) && !SteamService.keepAlive) {
                 val baseRoute = viewModel.getPersistedRoute() ?: PluviaScreen.Home.route
-                val targetRoute = if (SteamService.isLoggedIn) {
+                val targetRoute = if (SteamService.isLoggedIn && !PrefManager.startSteamOffline) {
                     baseRoute
                 } else {
                     // Non-Steam platforms: ensure offline param for Home
@@ -1994,7 +1994,7 @@ fun PluviaMain(
 
             val startDestination = rememberSaveable {
                 when {
-                    SteamService.isLoggedIn -> PluviaScreen.Home.route + "?offline=false"
+                    SteamService.isLoggedIn && !PrefManager.startSteamOffline -> PluviaScreen.Home.route + "?offline=false"
                     // skip login screen if any service has stored credentials
                     SteamUtils.hasStoredCredentials() ||
                         GOGService.hasStoredCredentials(context) ||

@@ -1108,6 +1108,14 @@ object PrefManager {
             setPref(STEAM_CLOUD_SYNC_DISABLED, value)
         }
 
+    /** Open the library in Steam offline mode and stay there after Steam signs in. */
+    private val START_STEAM_OFFLINE = booleanPreferencesKey("start_steam_offline")
+    var startSteamOffline: Boolean
+        get() = getPref(START_STEAM_OFFLINE, false)
+        set(value) {
+            setPref(START_STEAM_OFFLINE, value)
+        }
+
     /** The machine name Steam is told, or "" to use the device's own name. */
     private val CUSTOM_MACHINE_NAME = stringPreferencesKey("custom_machine_name")
     var customMachineName: String
